@@ -15,11 +15,9 @@ class Player:
             f"{self.name}은(는) 지금까지 {self.lose_num}\U0001F37A! 치사량까지 {self.deadline}"
         )
 
-
-    def lose_game(self): # 게임에서 걸렸을 때
-        self.lose_num += 1 # 걸린 횟수 +1
-        self.deadline -= 1 # 치사량 -1
-    
+    def lose_game(self):  # 게임에서 걸렸을 때
+        self.lose_num += 1  # 걸린 횟수 +1
+        self.deadline -= 1  # 치사량 -1
 
     def is_dead(self):  # 치사량만큼 마셨는지 확인
         if self.deadline == 0:  # 치사량이 0이면
@@ -46,63 +44,71 @@ def finish_game(name):  # 게임 종료
 # 2번 게임
 # 여기 구현~~~
 
+
 # 3번 게임
 def iam_ground(starter, player):
     print("아이엠 그라운드 자기 이름 대기~")
-    
+
     for gamer in player:
         print(f"나는 {gamer.name}!")
 
     print("아이엠 그라운드 지금부터 시작 ~")
-    
+
     defender = []
     attacker = starter
     while True:
-        for gamer in player: # 공격자 제외 나머지 사람들은 방어
+        for gamer in player:  # 공격자 제외 나머지 사람들은 방어
             if gamer.name != attacker.name:
                 defender.append(gamer)
 
         # 공격 부분
-        if attacker.name == name : # 공격자가 나일 경우
-            _who, num = input("누구를 몇 번 부를 건지 입력 : ").split(sep = ' ') # 이름, 횟수 입력
+        if attacker.name == name:  # 공격자가 나일 경우
+            _who, num = input("누구를 몇 번 부를 건지 입력 : ").split(
+                sep=" "
+            )  # 이름, 횟수 입력
             for i in defender:
                 if i.name == _who:
                     who = i
-        else : # 공격자가 내가 아닐 경우
-            who = defender[random.randint(0,len(defender)-1)] # 이름 랜덤 선택 
-            num = random.randint(1,4) # 이름 부를 횟수 랜덤 선택
+        else:  # 공격자가 내가 아닐 경우
+            who = defender[random.randint(0, len(defender) - 1)]  # 이름 랜덤 선택
+            num = random.randint(1, 4)  # 이름 부를 횟수 랜덤 선택
             print(f"{attacker.name} : {who.name}, {num}!")
-        
+
         # 방어 부분
-        weight = [] # 가중치 리스트
+        weight = []  # 가중치 리스트
         defend = []
-        if who.name == name : # 내가 지목된 경우
+        if who.name == name:  # 내가 지목된 경우
             # print("내가 지목됨. 알맞게 방어 : ", end=' ')
-            defend = input("내가 지목됨. 알맞게 방어 : ").split(sep = ' ')
-            if len(defend) != int(num) : # 틀리면 게임 종료
-                print(f"아 누가누가 술을 마셔 {name}(이)가 술을 마셔~ 원~~~샷!")
+            defend = input("내가 지목됨. 알맞게 방어 : ").split(sep=" ")
+            if len(defend) != int(num):  # 틀리면 게임 종료
+                print(
+                    f"모두 : 아 누가 술을 마셔 {name}(이)가 술을 마셔~ {name[0]}! 짝짝짝 짝짝! {name[1]}! 짝짝짝 짝짝! 원~~~샷!"
+                )
                 return who
-        else : # 다른 사람이 지목된 경우
-            for i in range(1,5):
+        else:  # 다른 사람이 지목된 경우
+            for i in range(1, 5):
                 if i == int(num):
-                    weight.append(0.6) # 올바르게 대답할 확률 0.7
+                    weight.append(0.6)  # 올바르게 대답할 확률 0.7
                 else:
-                    weight.append(0.2) # 틀릴 확률 0.1
-            answer_num = random.choices(range(1,5),weight)[0] #가중치를 적용하여 대답할 횟수 1~4 랜덤 추출
-            print(f"{who.name} : ", end=' ')
-            for i in range(1, answer_num+1): # 대답할 횟수만큼 대답하게 함
-                print(f"{who.name}", end=' ')
-            print('!', end=' ')
+                    weight.append(0.2)  # 틀릴 확률 0.1
+            answer_num = random.choices(range(1, 5), weight)[
+                0
+            ]  # 가중치를 적용하여 대답할 횟수 1~4 랜덤 추출
+            print(f"{who.name} : ", end=" ")
+            for i in range(1, answer_num + 1):  # 대답할 횟수만큼 대답하게 함
+                print(f"{who.name}", end=" ")
+            print("!", end=" ")
             print()
-            if answer_num != int(num) : # 틀렸으면 게임 종료
-                print(f"아 누가누가 술을 마셔 {who.name}(이)가 술을 마셔~ 원~~~샷!")
-                return who 
+            if answer_num != int(num):  # 틀렸으면 게임 종료
+                print(
+                    f"모두 : 아 누가 술을 마셔 {who.name}(이)가 술을 마셔~ {who.name[0]}! 짝짝짝 짝짝! {who.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
+                )
+                return who
         attacker = who
         defender.clear()
         weight.clear()
         defend.clear()
 
- 
 
 # 4번 게임
 # 여기 구현~~~
@@ -139,7 +145,7 @@ def subwaygame(choiced_player, player) -> Player:
                 ]  # 다음 사람으로 넘어가기
             else:  # 틀렸을 떄
                 print(
-                    f"모두 :{target_player.name}이(가) 술을마셔 {target_player.name}! 원 ~ 샷!!"
+                    f"모두: {target_player.name}이(가) 술을마셔 {target_player.name[0]}! 짝짝짝 짝짝! {target_player.name[1]}! 짝짝짝 짝짝! 원 ~ 샷!!"
                 )
                 break
         else:  # 컴퓨터면
@@ -153,7 +159,7 @@ def subwaygame(choiced_player, player) -> Player:
                 else:
                     print(f"{target_player.name}: 아.")
                 print(
-                    f"모두: {target_player.name}이가 술을마셔 {target_player.name}! 원 ~ 샷!!"
+                    f"모두: {target_player.name}이(가) 술을마셔 {target_player.name[0]}! 짝짝짝 짝짝! {target_player.name[1]}! 짝짝짝 짝짝! 원 ~ 샷!!"
                 )
                 break
             else:
@@ -240,7 +246,7 @@ friends = make_friend(name, friendNum, player_list)
 player = [me]  # 술게임에 참가하는 총 참가자 명단(객체 저장)
 for friend in friends:
 
-    num = random.randint(1,5)
+    num = random.randint(1, 5)
     if 1 <= num <= 5:
         if num == 1:
             deadline = 2
@@ -325,7 +331,7 @@ while True:  # 게임 시작 반복문
         print("2번 게임 시작")
         # 2번 게임 함수 호출
     elif num == 3:
-        #print("3번 게임 시작")
+        # print("3번 게임 시작")
         loser = iam_ground(choice_player, player)
         # 3번 게임 함수 호출
     elif num == 4:

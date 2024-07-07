@@ -10,6 +10,8 @@ class Player:
         self.name = name  # 이름
         self.deadline = deadline  # 치사량
         self.lose_num = lose_num  # 걸린 횟수
+        self.left = None  # 왼쪽 플레이어
+        self.right = None  # 오른쪽 플레이어
 
     def status(self):  # 현재 상태 출력
         print(
@@ -40,7 +42,90 @@ def finish_game(name):  # 게임 종료
 
 #####################
 # 1번 게임
-# 여기 구현~~~
+def game_007(current_player, players):
+    print("공공칠빵 게임을 시작합니다!")
+    
+    # 플레이어들의 순서를 랜덤하게 섞기
+    random.shuffle(players)
+    
+    # 각 플레이어의 양옆 플레이어 지정
+    n = len(players)
+    for i in range(n):
+        players[i].left = players[(i-1)%n]
+        players[i].right = players[(i+1)%n]
+    
+    # 게임 진행
+    current_word = ""
+    first_turn = True
+    while True:
+        # 랜덤으로 플레이어 선택
+        current_player = random.choice(players)
+        
+        print(f"\n{current_player.name}의 차례입니다.")
+        
+        # 자기 자신을 지목한 경우
+        if random.random() < 0.2:  # 20% 확률로 자기 자신 지목
+            print(f"{current_player.name}: 공공칠빵!")
+            
+            # 양옆 플레이어가 '으악!' 또는 '...' 외치기
+            left_shout = '으악!' if random.random() < 0.5 else '...'
+            right_shout = '으악!' if random.random() < 0.5 else '...'
+            
+            print(f"{current_player.left.name}: {left_shout}")
+            print(f"{current_player.right.name}: {right_shout}")
+            
+            if left_shout == '...' or right_shout == '...':
+                loser = current_player.left if left_shout == '...' else current_player.right
+                print(
+                    f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
+                )
+                return loser
+            
+            current_word = ""  # 단어 초기화
+            first_turn = True  # 새로운 턴을 시작할 때 첫 턴으로 설정
+        
+        # 다른 플레이어를 지목한 경우
+        else:
+            if first_turn:
+                valid_words = ["공", "공공", "공공칠", "공공칠빵"]
+            elif current_word == "":
+                valid_words = ["공"]
+            elif current_word == "공":
+                valid_words = ["공"]
+            elif current_word == "공공":
+                valid_words = ["칠"]
+            elif current_word == "공공칠":
+                valid_words = ["빵"]
+            
+            word = input(f"{current_player.name}, 단어를 말하세요 ({', '.join(valid_words)} 중 하나): ")
+            
+            if word not in valid_words:
+                print(f"{current_player.name}이(가) 잘못된 단어를 말해 졌습니다!")
+                return current_player
+            
+            current_word = word if first_turn else current_word + word
+            
+            if current_word == "공공칠빵":
+                print(f"{current_player.name}: 공공칠빵!")
+                
+                # 양옆 플레이어가 '으악!' 또는 '...' 외치기
+                left_shout = '으악!' if random.random() < 0.5 else '...'
+                right_shout = '으악!' if random.random() < 0.5 else '...'
+                
+                print(f"{current_player.left.name}: {left_shout}")
+                print(f"{current_player.right.name}: {right_shout}")
+                
+                if left_shout == '...' or right_shout == '...':
+                    loser = current_player.left if left_shout == '...' else current_player.right
+                    print(
+                        f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
+                    )
+                    return loser
+                
+                current_word = ""  # 단어 초기화
+                first_turn = True  # 새로운 턴을 시작할 때 첫 턴으로 설정
+            
+            first_turn = False
 
 # 2번 게임
 def like_game_check(str, a, game2_players, player, count, game2_player):
@@ -367,7 +452,8 @@ while True:  # 게임 시작 반복문
     # 게임 구현
 
     if num == 1:
-        print("1번 게임 시작")
+        # print("1번 게임 시작")
+        loser = game_007(choice_player, player)
         # 1번 게임 함수 호출
     elif num == 2:
         print("2번 게임 시작")

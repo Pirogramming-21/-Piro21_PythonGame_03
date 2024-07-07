@@ -67,14 +67,12 @@ def like_game(choice_player,player):
             game2_players.remove(game2_player)
         if game2_players: 
             if me.name == game2_player.name:  # 시작 플레이어가 본인일 경우
-                print("현재 카운트: ", count)
                 a, b = input(game2_player.name + ": ").split()
                 b = random.choice(speak_list)
                 print("->", a, " : ", b)
                 time.sleep(2)
                 game2_player, game2_players, count = like_game_check(b, a, game2_players, player, count,game2_player)
             else:  # 시작 플레이어가 본인이 아닐 경우
-                print("현재 카운트: ", count) 
                 a = random.choice(game2_players).name
                 print(game2_player.name + ": " + a + " " + "좋아!")
                 time.sleep(2)

@@ -183,7 +183,7 @@ while True:
 friends = make_friend(name, friendNum, player_list)
 player = [me]  # 술게임에 참가하는 총 참가자 명단(객체 저장)
 for friend in friends:
-    num = random.randint(1, 6)
+    num = random.randint(1, 5)
     if 1 <= num <= 5:
         if num == 1:
             deadline = 2

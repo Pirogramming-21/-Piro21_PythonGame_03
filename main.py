@@ -200,8 +200,9 @@ for friend in friends:
     player.append(player_obj)
 
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-round = 0  # 게임 몇 판째인지 확인
-while True:  # 게임 시작 반복문
+round = 0 # 게임 몇 판째인지 확인
+alist = []
+while True: # 게임 시작 반복문
     print(f"현재 몇 판째? => {round}")
 
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -220,16 +221,21 @@ while True:  # 게임 시작 반복문
     print("                   \U0001F37A 3. 3번 게임 이름")
     print("                   \U0001F37A 4. 4번 게임 이름")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
-    choice_player = player[
-        round % (len(player))
-    ]  # 몇 번째 사람이 게임을 고를 차례인지 확인용
-
-    if choice_player.name == name:  # 게임을 고르는 사람이 나면 직접 게임 선택
-        print(
-            f"{choice_player.name}(이)가 좋아하는 랜덤 게임 ~ 랜덤 게임 ~ 무슨 게임? : ",
-            end=" ",
-        )
+   
+    if round == 0 : # 첫 번째 판은 내가 먼저
+        choice_player = me
+    elif 1 <= round <= len(player)-1 : #두 번째 ~ 마지막 사람 차례까지는 랜덤 선택
+        a = random.randint(1,len(player)-1)
+        while a in alist: # 이미 했던 사람이면 다시 선택
+            a = random.randint(1,len(player)-1)
+        alist.append(a)
+        print('alist에는 ',alist)
+        choice_player = player[a]
+    else: # 한 바퀴 다 돌았는데 아무도 안죽었으면 계속 랜덤 선택
+        choice_player = player[random.randint(0,len(player)-1)]
+    
+    if choice_player.name == name : # 게임을 고르는 사람이 나면 직접 게임 선택
+        print(f"{choice_player.name}(이)가 좋아하는 랜덤 게임 ~ 랜덤 게임 ~ 무슨 게임? : ", end=' ')
         num = int(input())
     else:  # 내가 아니면 랜덤으로 게임 선택
         print(

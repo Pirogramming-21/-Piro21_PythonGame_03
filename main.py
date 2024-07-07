@@ -47,7 +47,7 @@ def finish_game(name):  # 게임 종료
 # 여기 구현~~~
 
 # 3번 게임
-def iam_ground(player):
+def iam_ground(starter, player):
     print("아이엠 그라운드 자기 이름 대기~")
     
     for gamer in player:
@@ -56,8 +56,8 @@ def iam_ground(player):
     print("아이엠 그라운드 지금부터 시작 ~")
     
     defender = []
+    attacker = starter
     while True:
-        attacker = player[random.randint(0,len(player)-1)] # 공격자 무작위 선택
         for gamer in player: # 공격자 제외 나머지 사람들은 방어
             if gamer.name != attacker.name:
                 defender.append(gamer)
@@ -97,6 +97,7 @@ def iam_ground(player):
             if answer_num != int(num) : # 틀렸으면 게임 종료
                 print(f"아 누가누가 술을 마셔 {who.name}(이)가 술을 마셔~ 원~~~샷!")
                 return who 
+        attacker = who
         defender.clear()
         weight.clear()
         defend.clear()
@@ -325,7 +326,7 @@ while True:  # 게임 시작 반복문
         # 2번 게임 함수 호출
     elif num == 3:
         #print("3번 게임 시작")
-        loser = iam_ground(player)
+        loser = iam_ground(choice_player, player)
         # 3번 게임 함수 호출
     elif num == 4:
         # print("4번 게임 시작")

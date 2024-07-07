@@ -15,13 +15,15 @@ class Player:
             f"{self.name}은(는) 지금까지 {self.lose_num}\U0001F37A! 치사량까지 {self.deadline}"
         )
 
+
+    def lose_game(self): # 게임에서 걸렸을 때
+        self.lose_num += 1 # 걸린 횟수 +1
+        self.deadline -= 1 # 치사량 -1
+    
+
     def is_dead(self):  # 치사량만큼 마셨는지 확인
         if self.deadline == 0:  # 치사량이 0이면
             finish_game(self.name)  # 게임 종료)
-
-    def lose_game(self):  # 게임에서 걸렸을 때
-        self.lose_num += 1  # 걸린 횟수 +1
-        self.deadline -= 1  # 치사량 -1
 
 
 def make_friend(my_name, friend_num, player_list):  # 나를 제외한 친구 랜덤 추출
@@ -45,8 +47,60 @@ def finish_game(name):  # 게임 종료
 # 여기 구현~~~
 
 # 3번 게임
-# 여기 구현~~~
+def iam_ground(player):
+    print("아이엠 그라운드 자기 이름 대기~")
+    
+    for gamer in player:
+        print(f"나는 {gamer.name}!")
 
+    print("아이엠 그라운드 지금부터 시작 ~")
+    
+    defender = []
+    while True:
+        attacker = player[random.randint(0,len(player)-1)] # 공격자 무작위 선택
+        for gamer in player: # 공격자 제외 나머지 사람들은 방어
+            if gamer.name != attacker.name:
+                defender.append(gamer)
+
+        # 공격 부분
+        if attacker.name == name : # 공격자가 나일 경우
+            _who, num = input("누구를 몇 번 부를 건지 입력 : ").split(sep = ' ') # 이름, 횟수 입력
+            for i in defender:
+                if i.name == _who:
+                    who = i
+        else : # 공격자가 내가 아닐 경우
+            who = defender[random.randint(0,len(defender)-1)] # 이름 랜덤 선택 
+            num = random.randint(1,4) # 이름 부를 횟수 랜덤 선택
+            print(f"{attacker.name} : {who.name}, {num}!")
+        
+        # 방어 부분
+        weight = [] # 가중치 리스트
+        defend = []
+        if who.name == name : # 내가 지목된 경우
+            # print("내가 지목됨. 알맞게 방어 : ", end=' ')
+            defend = input("내가 지목됨. 알맞게 방어 : ").split(sep = ' ')
+            if len(defend) != int(num) : # 틀리면 게임 종료
+                print(f"아 누가누가 술을 마셔 {name}(이)가 술을 마셔~ 원~~~샷!")
+                return who
+        else : # 다른 사람이 지목된 경우
+            for i in range(1,5):
+                if i == int(num):
+                    weight.append(0.6) # 올바르게 대답할 확률 0.7
+                else:
+                    weight.append(0.2) # 틀릴 확률 0.1
+            answer_num = random.choices(range(1,5),weight)[0] #가중치를 적용하여 대답할 횟수 1~4 랜덤 추출
+            print(f"{who.name} : ", end=' ')
+            for i in range(1, answer_num+1): # 대답할 횟수만큼 대답하게 함
+                print(f"{who.name}", end=' ')
+            if answer_num != int(num) : # 틀렸으면 게임 종료
+                print(f"아 누가누가 술을 마셔 {who.name}(이)가 술을 마셔~ 원~~~샷!")
+                return who 
+        print()
+        defender.clear()
+        weight.clear()
+        defend.clear()
+
+ 
 
 # 4번 게임
 # 여기 구현~~~
@@ -183,7 +237,7 @@ while True:
 friends = make_friend(name, friendNum, player_list)
 player = [me]  # 술게임에 참가하는 총 참가자 명단(객체 저장)
 for friend in friends:
-    num = random.randint(1, 6)
+    num = random.randint(1,5)
     if 1 <= num <= 5:
         if num == 1:
             deadline = 2
@@ -218,7 +272,7 @@ while True:  # 게임 시작 반복문
     )
     print("                   \U0001F37A 1. 1번 게임 이름")
     print("                   \U0001F37A 2. 2번 게임 이름")
-    print("                   \U0001F37A 3. 3번 게임 이름")
+    print("                   \U0001F37A 3. 아이엠 그라운드")
     print("                   \U0001F37A 4. 4번 게임 이름")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
@@ -229,7 +283,6 @@ while True:  # 게임 시작 반복문
         while a in alist:  # 이미 했던 사람이면 다시 선택
             a = random.randint(1, len(player) - 1)
         alist.append(a)
-        print("alist에는 ", alist)
         choice_player = player[a]
     else:  # 한 바퀴 다 돌았는데 아무도 안죽었으면 계속 랜덤 선택
         choice_player = player[random.randint(0, len(player) - 1)]
@@ -261,6 +314,7 @@ while True:  # 게임 시작 반복문
 
     print(f"{round}번째 라운드 게임 시작~~~~~~~ 이 부분도 인트로 찾아서 만들기")
     # 게임 구현
+
     if num == 1:
         print("1번 게임 시작")
         # 1번 게임 함수 호출
@@ -268,7 +322,8 @@ while True:  # 게임 시작 반복문
         print("2번 게임 시작")
         # 2번 게임 함수 호출
     elif num == 3:
-        print("3번 게임 시작")
+        #print("3번 게임 시작")
+        loser = iam_ground(player)
         # 3번 게임 함수 호출
     elif num == 4:
         # print("4번 게임 시작")

@@ -55,7 +55,7 @@ def like_game_check(str, a, game2_players, player, count, game2_player):
 
 def like_game(choice_player,player):
     speak_list = ["좋아!", "캌 퉤!"]
-    print("현재 사람들 중 한명을 지목하여 00 좋아!를 입력해주세요 (본인제외)")
+    print("현재 사람들 중 한명을 지목하여 00 좋아!를 입력해주세요. (본인제외) 한번 거절당한 사람에게는 다시시도 못합니다!")
     print("술도 마셨는데~좋아 게임할까?")
 
     game2_player = choice_player  # 시작 플레이어
@@ -65,28 +65,26 @@ def like_game(choice_player,player):
     while game2_players:
         if count == 0:
             game2_players.remove(game2_player)
-        if game2_players: 
-            if me.name == game2_player.name:  # 시작 플레이어가 본인일 경우
-                a, b = input(game2_player.name + ": ").split()
+        if me.name == game2_player.name:  # 시작 플레이어가 본인일 경우
+            a, b = input(game2_player.name + ": ").split()
+            b = random.choice(speak_list)
+            print("->", a, " : ", b)
+            time.sleep(2)
+            game2_player, game2_players, count = like_game_check(b, a, game2_players, player, count,game2_player)
+        else:  # 시작 플레이어가 본인이 아닐 경우
+            a = random.choice(game2_players).name
+            print(game2_player.name + ": " + a + " " + "좋아!")
+            time.sleep(2)
+            if me.name != a:  # 컴퓨터가 지목되었을 경우
                 b = random.choice(speak_list)
                 print("->", a, " : ", b)
                 time.sleep(2)
                 game2_player, game2_players, count = like_game_check(b, a, game2_players, player, count,game2_player)
-            else:  # 시작 플레이어가 본인이 아닐 경우
-                a = random.choice(game2_players).name
-                print(game2_player.name + ": " + a + " " + "좋아!")
+            else:  # 본인이 지목되었을 경우
+                b = input("-> " + a + " : ")
                 time.sleep(2)
-                if me.name != a:  # 컴퓨터가 지목되었을 경우
-                    b = random.choice(speak_list)
-                    print("->", a, " : ", b)
-                    time.sleep(2)
-                    game2_player, game2_players, count = like_game_check(b, a, game2_players, player, count,game2_player)
-                else:  # 본인이 지목되었을 경우
-                    b = input("-> " + a + " : ")
-                    time.sleep(2)
-                    game2_player, game2_players, count = like_game_check(b, a, game2_players, player, count,game2_player)
-        else:
-            break
+                game2_player, game2_players, count = like_game_check(b, a, game2_players, player, count,game2_player)
+    print(f"아 누가누가 술을 마셔 {game2_player.name}이(가) 술을 마셔 원~~~~~샷! \U0001F61D")
     return game2_player
 
 # 3번 게임

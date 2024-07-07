@@ -1,41 +1,50 @@
 import random
 import sys
+import subwaylist
 
-#참가자 정보 저장할 클래스
-class Player :
-    def __init__(self, name, deadline, lose_num) :
-        self.name = name # 이름
-        self.deadline = deadline # 치사량
-        self.lose_num = lose_num # 걸린 횟수
 
-    def status(self): # 현재 상태 출력
-        print(f"{self.name}은(는) 지금까지 {self.lose_num}\U0001F37A! 치사량까지 {self.deadline}")
+# 참가자 정보 저장할 클래스
+class Player:
+    def __init__(self, name, deadline, lose_num):
+        self.name = name  # 이름
+        self.deadline = deadline  # 치사량
+        self.lose_num = lose_num  # 걸린 횟수
 
-    def is_dead(self): #치사량만큼 마셨는지 확인
-        if self.deadline == 0: # 치사량이 0이면
-            finish_game(self.name) # 게임 종료)
+    def status(self):  # 현재 상태 출력
+        print(
+            f"{self.name}은(는) 지금까지 {self.lose_num}\U0001F37A! 치사량까지 {self.deadline}"
+        )
+
 
     def lose_game(self): # 게임에서 걸렸을 때
-        print(f"아 누가누가 술을 마셔 {self.name}(이)가 술을 마셔~ 원~~~샷!")
         self.lose_num += 1 # 걸린 횟수 +1
         self.deadline -= 1 # 치사량 -1
     
 
-def make_friend(my_name, friend_num, player_list) : #나를 제외한 친구 랜덤 추출
-    player_list.remove(my_name)# 리스트에서 나 삭제
-    friend_list = random.sample(player_list, friend_num) # 리스트에서 선택한 친구 수만큼 랜덤 추출
+    def is_dead(self):  # 치사량만큼 마셨는지 확인
+        if self.deadline == 0:  # 치사량이 0이면
+            finish_game(self.name)  # 게임 종료)
+
+
+def make_friend(my_name, friend_num, player_list):  # 나를 제외한 친구 랜덤 추출
+    player_list.remove(my_name)  # 리스트에서 나 삭제
+    friend_list = random.sample(
+        player_list, friend_num
+    )  # 리스트에서 선택한 친구 수만큼 랜덤 추출
     return friend_list
 
-def finish_game(name): # 게임 종료
+
+def finish_game(name):  # 게임 종료
     print(f"{name}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz")
     sys.exit()
 
+
 #####################
 # 1번 게임
-    #여기 구현~~~
+# 여기 구현~~~
 
 # 2번 게임
-    #여기 구현~~~
+# 여기 구현~~~
 
 # 3번 게임
 def iam_ground(player):
@@ -71,6 +80,7 @@ def iam_ground(player):
             # print("내가 지목됨. 알맞게 방어 : ", end=' ')
             defend = input("내가 지목됨. 알맞게 방어 : ").split(sep = ' ')
             if len(defend) != int(num) : # 틀리면 게임 종료
+                print(f"아 누가누가 술을 마셔 {name}(이)가 술을 마셔~ 원~~~샷!")
                 return who
         else : # 다른 사람이 지목된 경우
             for i in range(1,5):
@@ -83,36 +93,98 @@ def iam_ground(player):
             for i in range(1, answer_num+1): # 대답할 횟수만큼 대답하게 함
                 print(f"{who.name}", end=' ')
             if answer_num != int(num) : # 틀렸으면 게임 종료
+                print(f"아 누가누가 술을 마셔 {who.name}(이)가 술을 마셔~ 원~~~샷!")
                 return who 
         print()
         defender.clear()
         weight.clear()
         defend.clear()
 
-        
+ 
 
 # 4번 게임
-    #여기 구현~~~
+# 여기 구현~~~
+def subwaygame(choiced_player, player) -> Player:
+    target_player = choiced_player
+    is_me = False
+    if choiced_player == player[0]:
+        is_me = True
+    if is_me:
+        target_line = input("지하철~ 지하철! 지하철~ 지하철! 몇호선~ 몇호선? :")
+        tmp = target_line
+        try:
+            target_line = "".join(filter(str.isdigit, target_line))
+            target_line = int(target_line)
+        except ValueError:
+            target_line = 0
+        if target_line not in subwaylist.subway_lines.keys():
+            print(f"뭔 {tmp}이여~ 바보샷 ~! 바보샷 ~!")
+            return target_player
+    else:
+        target_line = random.choice(list(subwaylist.subway_lines.keys()))
+    print(f"{choice_player.name}: {target_line}호선! {target_line}호선!")
+    line = subwaylist.subway_lines[int(target_line)]
+    print("Game ~ start!")
+
+    while True:
+        if target_player == player[0]:  # 본인이면
+            selected_station = input(f"{target_line}호선 무슨역? :")
+            if selected_station in line:
+                print(f"{target_player.name}: {selected_station}!")
+                line.remove(selected_station)
+                target_player = player[
+                    (player.index(target_player) + 1) % 4
+                ]  # 다음 사람으로 넘어가기
+            else:  # 틀렸을 떄
+                print(
+                    f"모두 :{target_player.name}이(가) 술을마셔 {target_player.name}! 원 ~ 샷!!"
+                )
+                break
+        else:  # 컴퓨터면
+            a = random.randint(0, 9)
+            if a == 0:  # 컴퓨터는 10% 확률로 틀림
+                b = random.randint(0, 2)
+                if b == 0:
+                    print(f"{target_player.name}: 흠...")
+                elif b == 1:
+                    print(f"{target_player.name}: 어...")
+                else:
+                    print(f"{target_player.name}: 아.")
+                print(
+                    f"모두: {target_player.name}이가 술을마셔 {target_player.name}! 원 ~ 샷!!"
+                )
+                break
+            else:
+                selected_station = random.choice(line)
+                print(f"{target_player.name}: {selected_station}!")
+                line.remove(selected_station)
+                target_player = player[
+                    (player.index(target_player) + 1) % 4
+                ]  # 다음 사람으로 넘어가기
+    return target_player
+
 
 ######################
 
-player_list = ["민석", "연진", "동현", "라현"] #전체 인원 명단
+player_list = ["민석", "연진", "동현", "라현"]  # 전체 인원 명단
 
 # 게임 인트로 정해서 넣기
 # 1번
-print("게임을 진행할까요? (y/n) : ", end=' ')
+print("게임을 진행할까요? (y/n) : ", end=" ")
 answer = input()
 
-if answer == 'n':
+if answer == "n":
     sys.exit()
 
 # 2번
 
-print("오늘 거하게 취해볼 당신의 이름은? : ", end=' ')
+print("오늘 거하게 취해볼 당신의 이름은? : ", end=" ")
 name = input()
 
 # 3번
-print("~~~~~~~~~~~~~~~~~~\U0001F37A  소주 기준 당신의 주량은? \U0001F37A~~~~~~~~~~~~~~~~~")
+print(
+    "~~~~~~~~~~~~~~~~~~\U0001F37A  소주 기준 당신의 주량은? \U0001F37A~~~~~~~~~~~~~~~~~"
+)
 print("                   \U0001F37A 1. 소주 반병 (2잔)")
 print("                   \U0001F37A 2. 소주 반병에서 한병 (4잔)")
 print("                   \U0001F37A 3. 소주 한병에서 한병 반 (6잔)")
@@ -122,7 +194,7 @@ print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 while True:
     try:
-        print("당신의 치사량(주량)은 얼마만큼인가요? (1~5를 선택해주세요) : ", end=' ')
+        print("당신의 치사량(주량)은 얼마만큼인가요? (1~5를 선택해주세요) : ", end=" ")
         num = int(input())
         if 1 <= num <= 5:
             if num == 1:
@@ -140,7 +212,7 @@ while True:
             if num == 5:
                 deadline = 10
                 break
-        else :
+        else:
             print("1~5를 선택해주세요")
     except:
         print("1~5를 선택해주세요")
@@ -150,17 +222,20 @@ me = Player(name, deadline, 0)
 # 4번
 while True:
     try:
-        print("함께 취할 친구들은 얼마나 필요하신가요?(사회적 거리두기로 인해 최대 3명까지 초대할 수 있어요!) : ", end=' ')
+        print(
+            "함께 취할 친구들은 얼마나 필요하신가요?(사회적 거리두기로 인해 최대 3명까지 초대할 수 있어요!) : ",
+            end=" ",
+        )
         friendNum = int(input())
         if 1 <= friendNum <= 3:
             break
-        else :
+        else:
             print("1명에서 3명까지 초대할 수 있습니다")
     except:
         print("1명에서 3명까지 초대할 수 있습니다")
 
 friends = make_friend(name, friendNum, player_list)
-player = [me] # 술게임에 참가하는 총 참가자 명단(객체 저장)
+player = [me]  # 술게임에 참가하는 총 참가자 명단(객체 저장)
 for friend in friends:
     num = random.randint(1,5)
     if 1 <= num <= 5:
@@ -179,63 +254,82 @@ for friend in friends:
     player.append(player_obj)
 
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-round = 0 # 게임 몇 판째인지 확인
+round = 0  # 게임 몇 판째인지 확인
 alist = []
-while True: # 게임 시작 반복문
+while True:  # 게임 시작 반복문
     print(f"현재 몇 판째? => {round}")
 
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    for i in player: # 게임 전 현재 상태 출력
+    for i in player:  # 게임 전 현재 상태 출력
         i.status()
 
-    for i in player: # 치사량만큼 마셨는지 확인
+    for i in player:  # 치사량만큼 마셨는지 확인
         i.is_dead()
 
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print("~~~~~~~~~~~~~~~~~~\U0001F37A  오늘의 Alcohol GAME \U0001F37A~~~~~~~~~~~~~~~~~")
+    print(
+        "~~~~~~~~~~~~~~~~~~\U0001F37A  오늘의 Alcohol GAME \U0001F37A~~~~~~~~~~~~~~~~~"
+    )
     print("                   \U0001F37A 1. 1번 게임 이름")
     print("                   \U0001F37A 2. 2번 게임 이름")
     print("                   \U0001F37A 3. 아이엠 그라운드")
     print("                   \U0001F37A 4. 4번 게임 이름")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    
 
-    if round == 0 : # 첫 번째 판은 내가 먼저
+    if round == 0:  # 첫 번째 판은 내가 먼저
         choice_player = me
-    elif 1 <= round <= len(player)-1 : #두 번째 ~ 마지막 사람 차례까지는 랜덤 선택
-        a = random.randint(1,len(player)-1)
-        while a in alist: # 이미 했던 사람이면 다시 선택
-            a = random.randint(1,len(player)-1)
+    elif 1 <= round <= len(player) - 1:  # 두 번째 ~ 마지막 사람 차례까지는 랜덤 선택
+        a = random.randint(1, len(player) - 1)
+        while a in alist:  # 이미 했던 사람이면 다시 선택
+            a = random.randint(1, len(player) - 1)
         alist.append(a)
         choice_player = player[a]
-    else: # 한 바퀴 다 돌았는데 아무도 안죽었으면 계속 랜덤 선택
-        choice_player = player[random.randint(0,len(player)-1)]
-    
-    if choice_player.name == name : # 게임을 고르는 사람이 나면 직접 게임 선택
-        print(f"{choice_player.name}(이)가 좋아하는 랜덤 게임 ~ 랜덤 게임 ~ 무슨 게임? : ", end=' ')
+    else:  # 한 바퀴 다 돌았는데 아무도 안죽었으면 계속 랜덤 선택
+        choice_player = player[random.randint(0, len(player) - 1)]
+
+    if choice_player.name == name:  # 게임을 고르는 사람이 나면 직접 게임 선택
+        print(
+            f"{choice_player.name}(이)가 좋아하는 랜덤 게임 ~ 랜덤 게임 ~ 무슨 게임? : ",
+            end=" ",
+        )
         num = int(input())
-    else : # 내가 아니면 랜덤으로 게임 선택
-        print("술게임 진행중 ! 다른 사람의 턴입니다. 그만하고 싶으면 \"exit\"를, 계속하고 싶으면 아무키나 입력해 주세요 : ", end=' ')
+    else:  # 내가 아니면 랜덤으로 게임 선택
+        print(
+            '술게임 진행중 ! 다른 사람의 턴입니다. 그만하고 싶으면 "exit"를, 계속하고 싶으면 아무키나 입력해 주세요 : ',
+            end=" ",
+        )
         choice = input()
         if choice == "exit":
             sys.exit("게임을 종료합니다")
-        num = random.randint(1,5)
-        print(f"{choice_player.name}(이)가 좋아하는 랜덤 게임 ~ 랜덤 게임 ~ 무슨 게임? : {num}")
-    
+        num = random.randint(1, 5)
+        print(
+            f"{choice_player.name}(이)가 좋아하는 랜덤 게임 ~ 랜덤 게임 ~ 무슨 게임? : {num}"
+        )
+
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print(f"{choice_player.name} 님이 게임을 선택하셨습니다!\n")
-    
+
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
     print(f"{round}번째 라운드 게임 시작~~~~~~~ 이 부분도 인트로 찾아서 만들기")
     # 게임 구현
-    # if num == 1 ~
-    # if num == 2 ~
-    if num == 3 :
+
+    if num == 1:
+        print("1번 게임 시작")
+        # 1번 게임 함수 호출
+    elif num == 2:
+        print("2번 게임 시작")
+        # 2번 게임 함수 호출
+    elif num == 3:
+        #print("3번 게임 시작")
         loser = iam_ground(player)
-    # if num == 4 ~
+        # 3번 게임 함수 호출
+    elif num == 4:
+        # print("4번 게임 시작")
+        # 4번 게임 함수 호출
+        loser = subwaygame(choice_player, player)
 
     loser.lose_game()
-    print(f"\n{round}번째 라운드 게임 종료~~~~~~")
+    print(f"{round}번째 라운드 게임 종료~~~~~~")
     round += 1

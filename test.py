@@ -45,9 +45,6 @@ def finish_game(name):  # 게임 종료
 def game_007(current_player, players):
     print("\U0001F52B 공공칠빵\U0001F52B 게임을 시작합니다!")
     
-    # 플레이어들의 순서를 랜덤하게 섞기
-    #random.shuffle(players)
-    
     # 각 플레이어의 양옆 플레이어 지정
     n = len(players)
     for i in range(n):
@@ -58,46 +55,18 @@ def game_007(current_player, players):
     current_word = ""
     first_turn = True
     while True:
-        # 랜덤으로 플레이어 선택
-        current_player = random.choice(players)
-        
         print(f"\n{current_player.name}의 차례입니다.")
         
         # 자기 자신을 지목한 경우
         if random.random() < 0.2:  # 20% 확률로 자기 자신 지목
             print(f"{current_player.name}: 공공칠빵!")
             
-            # 양옆 플레이어가 '으악!' 또는 '...' 외치기
-            left_shout = '으악!' if random.random() < 0.5 else '...'
-            right_shout = '으악!' if random.random() < 0.5 else '...'
-            
-            print(f"{current_player.left.name}: {left_shout}")
-            print(f"{current_player.right.name}: {right_shout}")
-            
-            losers = []
-            if left_shout == '...':
-                losers.append(current_player.left)
-            if right_shout == '...':
-                losers.append(current_player.right)
-                
+            current_player, losers = who_is_next(current_player)
             if losers:
-                if len(losers) == 2:
-                    print(
-                        f"모두 : 아 누가 술을 마셔 둘이 같이 마셔 ~ 원~~~샷!"
-                    )
-                else:
-                    loser = losers[0]
-                    print(
-                        f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
-                    )
-                    
-                for loser in losers:
-                    loser.lose_game()
-        
-                return losers # 필요한가?
+                return losers
             
-            current_word = ""  # 단어 초기화
-            first_turn = True  # 새로운 턴을 시작할 때 첫 턴으로 설정
+            current_word = ""
+            first_turn = True
         
         # 다른 플레이어를 지목한 경우
         else:
@@ -116,46 +85,53 @@ def game_007(current_player, players):
             
             if word not in valid_words:
                 print(f"{current_player.name}이(가) 잘못된 단어를 말해 졌습니다!")
-                return current_player
+                return [current_player]
             
             current_word = word if first_turn else current_word + word
             
             if current_word == "공공칠빵":
                 print(f"{current_player.name}: 공공칠빵!")
                 
-                # 양옆 플레이어가 '으악!' 또는 '...' 외치기
-                left_shout = '으악!' if random.random() < 0.5 else '...'
-                right_shout = '으악!' if random.random() < 0.5 else '...'
-                
-                print(f"{current_player.left.name}: {left_shout}")
-                print(f"{current_player.right.name}: {right_shout}")
-
-                losers = []
-                if left_shout == '...':
-                    losers.append(current_player.left)
-                if right_shout == '...':
-                    losers.append(current_player.right)
-                
+                current_player, losers = who_is_next(current_player)
                 if losers:
-                    if len(losers) == 2:
-                        print(
-                            f"모두 : 아 누가 술을 마셔 둘이 같이 마셔 ~ 원~~~샷!"
-                        )
-                    else:
-                        loser = losers[0]
-                        print(
-                            f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
-                        )
-                    
-                    for loser in losers:
-                        loser.lose_game()
-        
-                    return losers # 필요한가?
+                    return losers
                 
-                current_word = ""  # 단어 초기화
-                first_turn = True  # 새로운 턴을 시작할 때 첫 턴으로 설정
+                current_word = ""
+                first_turn = True
+            else:
+                current_player = current_player.right  # 다음 플레이어로 넘어감
             
             first_turn = False
+
+def who_is_next(current_player):
+    # 양옆 플레이어가 '으악!' 또는 '...' 외치기
+    left_shout = '으악!' if random.random() < 0.5 else '...'
+    right_shout = '으악!' if random.random() < 0.5 else '...'
+    
+    print(f"{current_player.left.name}: {left_shout}")
+    print(f"{current_player.right.name}: {right_shout}")
+    
+    losers = []
+    if left_shout == '...':
+        losers.append(current_player.left)
+    if right_shout == '...':
+        losers.append(current_player.right)
+    
+    if losers:
+        if len(losers) == 2:
+            print(f"모두 : 아 누가 술을 마셔 둘이 같이 마셔 ~ 원~~~샷!")
+        else:
+            loser = losers[0]
+            print(f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!")
+        
+        for loser in losers:
+            loser.lose_game()
+        
+        next_player = current_player.right if right_shout == '...' else current_player.left
+    else:
+        next_player = current_player
+    
+    return next_player, losers
 
 # 2번 게임
 def like_game_check(str, a, game2_players, player, count, game2_player):

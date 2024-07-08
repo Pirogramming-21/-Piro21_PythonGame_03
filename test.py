@@ -304,7 +304,7 @@ def subwaygame(choiced_player, player) -> Player:
             return target_player
     else:
         target_line = random.choice(list(subwaylist.subway_lines.keys()))
-    print("\U0001F687 지하철~ 지하철! 지하철~ 지하철!")
+    print("\U0001F687 지하철~ 지하철! 지하철~ 지하철! 몇호선~ 몇호선?")
     print(f"{choice_player.name}: {target_line}호선! {target_line}호선!")
     line = subwaylist.subway_lines[int(target_line)]
     print("Game ~ start!")

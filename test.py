@@ -518,7 +518,6 @@ while True:  # 게임 시작 반복문
     elif num == 2:
         print("\U0001F494 좋아\U0001F494 게임 시작")
         loser = like_game(choice_player,player)
-        print(player)
         loser.lose_game()
         # 2번 게임 함수 호출
     elif num == 3:

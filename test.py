@@ -43,10 +43,10 @@ def finish_game(name):  # 게임 종료
 #####################
 # 1번 게임
 def game_007(current_player, players):
-    print("공공칠빵 게임을 시작합니다!")
+    print("\U0001F52B 공공칠빵\U0001F52B 게임을 시작합니다!")
     
     # 플레이어들의 순서를 랜덤하게 섞기
-    random.shuffle(players)
+    #random.shuffle(players)
     
     # 각 플레이어의 양옆 플레이어 지정
     n = len(players)
@@ -74,12 +74,27 @@ def game_007(current_player, players):
             print(f"{current_player.left.name}: {left_shout}")
             print(f"{current_player.right.name}: {right_shout}")
             
-            if left_shout == '...' or right_shout == '...':
-                loser = current_player.left if left_shout == '...' else current_player.right
-                print(
-                    f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
-                )
-                return loser
+            losers = []
+            if left_shout == '...':
+                losers.append(current_player.left)
+            if right_shout == '...':
+                losers.append(current_player.right)
+                
+            if losers:
+                if len(losers) == 2:
+                    print(
+                        f"모두 : 아 누가 술을 마셔 둘이 같이 마셔 ~ 원~~~샷!"
+                    )
+                else:
+                    loser = losers[0]
+                    print(
+                        f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
+                    )
+                    
+                for loser in losers:
+                    loser.lose_game()
+        
+                return losers # 필요한가?
             
             current_word = ""  # 단어 초기화
             first_turn = True  # 새로운 턴을 시작할 때 첫 턴으로 설정
@@ -114,13 +129,28 @@ def game_007(current_player, players):
                 
                 print(f"{current_player.left.name}: {left_shout}")
                 print(f"{current_player.right.name}: {right_shout}")
+
+                losers = []
+                if left_shout == '...':
+                    losers.append(current_player.left)
+                if right_shout == '...':
+                    losers.append(current_player.right)
                 
-                if left_shout == '...' or right_shout == '...':
-                    loser = current_player.left if left_shout == '...' else current_player.right
-                    print(
-                        f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
-                    )
-                    return loser
+                if losers:
+                    if len(losers) == 2:
+                        print(
+                            f"모두 : 아 누가 술을 마셔 둘이 같이 마셔 ~ 원~~~샷!"
+                        )
+                    else:
+                        loser = losers[0]
+                        print(
+                            f"모두 : 아 누가 술을 마셔 {loser.name}(이)가 술을 마셔~ {loser.name[0]}! 짝짝짝 짝짝! {loser.name[1]}! 짝짝짝 짝짝! 원~~~샷!"
+                        )
+                    
+                    for loser in losers:
+                        loser.lose_game()
+        
+                    return losers # 필요한가?
                 
                 current_word = ""  # 단어 초기화
                 first_turn = True  # 새로운 턴을 시작할 때 첫 턴으로 설정
@@ -141,7 +171,7 @@ def like_game_check(str, a, game2_players, player, count, game2_player):
 def like_game(choice_player,player):
     speak_list = ["좋아!", "캌 퉤!"]
     print("현재 사람들 중 한명을 지목하여 00 좋아!를 입력해주세요. (본인제외) 한번 거절당한 사람에게는 다시시도 못합니다!")
-    print("술도 마셨는데~좋아 게임할까?")
+    print("술도 마셨는데~ 좋아 게임할까?")
 
     game2_player = choice_player  # 시작 플레이어
     game2_players = player.copy()  # 플레이어 목록 복사
@@ -174,7 +204,7 @@ def like_game(choice_player,player):
 
 # 3번 게임
 def iam_ground(starter, player):
-    print("아이엠 그라운드 자기 이름 대기~")
+    print("\U0001F44F 아이엠 그라운드\U0001F44F 자기 이름 대기~")
 
     for gamer in player:
         print(f"나는 {gamer.name}!")
@@ -245,7 +275,7 @@ def subwaygame(choiced_player, player) -> Player:
     if choiced_player == player[0]:
         is_me = True
     if is_me:
-        target_line = input("지하철~ 지하철! 지하철~ 지하철! 몇호선~ 몇호선? :")
+        target_line = input("\U0001F687 지하철~ 지하철! 지하철~ 지하철! 몇호선~ 몇호선? :")
         tmp = target_line
         try:
             target_line = "".join(filter(str.isdigit, target_line))
@@ -398,7 +428,7 @@ print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 round = 0  # 게임 몇 판째인지 확인
 alist = []
 while True:  # 게임 시작 반복문
-    print(f"현재 몇 판째? => {round}")
+    # print(f"현재 몇 판째? => {round}") // 주석 단 사람 : 라현
 
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     for i in player:  # 게임 전 현재 상태 출력
@@ -411,10 +441,10 @@ while True:  # 게임 시작 반복문
     print(
         "~~~~~~~~~~~~~~~~~~\U0001F37A  오늘의 Alcohol GAME \U0001F37A~~~~~~~~~~~~~~~~~"
     )
-    print("                   \U0001F37A 1. 1번 게임 이름")
-    print("                   \U0001F37A 2. 2번 게임 이름")
-    print("                   \U0001F37A 3. 아이엠 그라운드")
-    print("                   \U0001F37A 4. 지하철")
+    print("                    1. \U0001F52B 공공칠빵\U0001F52B")
+    print("                    2. \U0001F494 좋아\U0001F494")
+    print("                    3. \U0001F44F 아이엠 그라운드\U0001F44F")
+    print("                    4. \U0001F687 지하철\U0001F687")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     if round == 0:  # 첫 번째 판은 내가 먼저
@@ -447,7 +477,7 @@ while True:  # 게임 시작 반복문
         choice = input()
         if choice == "exit":
             sys.exit("게임을 종료합니다")
-        num = random.randint(1, 5)
+        num = random.randint(1, 4)
         print(
             f"{choice_player.name}(이)가 좋아하는 랜덤 게임 ~ 랜덤 게임 ~ 무슨 게임? : {num}"
         )
@@ -458,26 +488,31 @@ while True:  # 게임 시작 반복문
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
-    print(f"{round}번째 라운드 게임 시작~~~~~~~ 이 부분도 인트로 찾아서 만들기")
+    print(f"{round+1}번째 라운드 게임 시작~~~~~~~ 이 부분도 인트로 찾아서 만들기") # 수정 완료 : round -> round + 1
     # 게임 구현
 
     if num == 1:
         # print("1번 게임 시작")
-        loser = game_007(choice_player, player)
+        # loser = 
+        game_007(choice_player, player)
+
         # 1번 게임 함수 호출
     elif num == 2:
-        print("2번 게임 시작")
+        print("\U0001F494 좋아\U0001F494 게임 시작")
         loser = like_game(choice_player,player)
+        loser.lose_game()
         # 2번 게임 함수 호출
     elif num == 3:
         # print("3번 게임 시작")
         loser = iam_ground(choice_player, player)
+        loser.lose_game()
         # 3번 게임 함수 호출
     elif num == 4:
         # print("4번 게임 시작")
         # 4번 게임 함수 호출
         loser = subwaygame(choice_player, player)
+        loser.lose_game()
 
-    loser.lose_game()
-    print(f"{round}번째 라운드 게임 종료~~~~~~ 이 부분도 인트로 찾아서 수정해야함")
+    #loser.lose_game()
+    print(f"{round+1}번째 라운드 게임 종료~~~~~~ 이 부분도 인트로 찾아서 수정해야함") # 수정 완료 : round -> round + 1
     round += 1

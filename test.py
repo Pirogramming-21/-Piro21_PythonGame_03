@@ -258,9 +258,9 @@ def iam_ground(starter, player):
         else:  # 다른 사람이 지목된 경우
             for i in range(1, 5):
                 if i == int(num):
-                    weight.append(0.6)  # 올바르게 대답할 확률 0.7
+                    weight.append(0.7)  # 올바르게 대답할 확률 0.7
                 else:
-                    weight.append(0.2)  # 틀릴 확률 0.1
+                    weight.append(0.1)  # 틀릴 확률 0.1
             answer_num = random.choices(range(1, 5), weight)[
                 0
             ]  # 가중치를 적용하여 대답할 횟수 1~4 랜덤 추출

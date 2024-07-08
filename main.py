@@ -80,7 +80,7 @@ def iam_ground(starter, player):
             # print("내가 지목됨. 알맞게 방어 : ", end=' ')
             defend = input("내가 지목됨. 알맞게 방어 : ").split(sep = ' ')
             if len(defend) != int(num) : # 틀리면 게임 종료
-                print(f"아 누가누가 술을 마셔 {name}(이)가 술을 마셔~ 원~~~샷!")
+                print(f"아 누가 술을 마셔 {name}(이)가 술을 마셔~ {name[0]} 짝짝짝 짝짝! {name[1]} 짝짝짝 짝짝! 원~~~샷!")
                 return who
         else : # 다른 사람이 지목된 경우
             for i in range(1,5):
